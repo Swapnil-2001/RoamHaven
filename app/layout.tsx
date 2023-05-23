@@ -2,6 +2,7 @@ import { Montserrat } from "next/font/google";
 
 import ListOfModals from "./components/modals/ListOfModals";
 import Navbar from "./components/navbar/Navbar";
+import ToasterProvider from "./providers/ToasterProvider";
 import "./globals.css";
 
 const fontFamily = Montserrat({
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body className={fontFamily.className}>
         <Navbar />
         <ListOfModals />
+        <ToasterProvider />
         {children}
       </body>
     </html>

@@ -24,7 +24,7 @@ const UserMenu: React.FC = (): JSX.Element => {
           <div className="hidden md:block">
             <Avatar />
           </div>
-          <div className="absolute right-0 top-14 flex w-[40vw] scale-0 transform cursor-pointer flex-col overflow-hidden rounded-lg border-[1px] border-gray-200 bg-white text-sm shadow-lg transition duration-200 ease-in-out group-hover:scale-100 md:w-3/4 lg:top-12 lg:w-1/2">
+          <div className="absolute right-0 top-14 flex w-[40vw] scale-0 transform cursor-pointer flex-col overflow-hidden rounded-xl border-[1px] border-gray-200 bg-white text-sm shadow-lg transition duration-200 ease-in-out group-hover:scale-100 md:w-3/4 lg:top-12 lg:w-1/2">
             <MenuItem handleMenuItemClick={() => {}} menuItemlabel="Login" />
             <MenuItem
               handleMenuItemClick={() => openModal("register")}

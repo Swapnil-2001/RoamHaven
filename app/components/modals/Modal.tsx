@@ -68,15 +68,15 @@ const Modal: React.FC<ModalProps> = ({
   return (
     <div
       onClick={handleModalClose}
-      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden bg-neutral-800/70 outline-none"
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto overflow-x-hidden bg-neutral-800/70 sm:py-8"
     >
       <div
         onClick={handleClickInsideModal}
-        className={`relative mx-auto my-6 flex h-full w-full flex-col rounded-lg bg-white duration-300 sm:h-auto sm:w-2/3 lg:w-1/2 xl:w-2/5 ${
+        className={`relative mx-auto flex h-auto w-full flex-col rounded-lg bg-white duration-300 sm:w-2/3 lg:w-1/2 xl:w-2/5 ${
           showModal ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
         }`}
       >
-        <div className="flex items-center justify-center rounded-t p-6 pb-4">
+        <div className="flex items-center justify-center rounded-t border-b-[1px] border-neutral-400 p-6">
           <div className="mt-2 text-lg font-semibold">{title}</div>
           <button
             onClick={handleModalClose}
@@ -86,7 +86,7 @@ const Modal: React.FC<ModalProps> = ({
           </button>
         </div>
         <div className="p-6 md:px-16">{body}</div>
-        <div className="flex w-full flex-row items-center gap-4 p-6">
+        <div className="flex w-full flex-row items-center gap-4 p-6 pt-2">
           {secondaryAction && secondaryActionLabel && (
             <Button
               isOutlined
@@ -101,6 +101,7 @@ const Modal: React.FC<ModalProps> = ({
             onClick={handleModalSubmit}
           />
         </div>
+        {footer}
       </div>
     </div>
   );

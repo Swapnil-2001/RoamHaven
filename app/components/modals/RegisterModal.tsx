@@ -1,23 +1,32 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import axios from "axios";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import { AiFillGithub } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 
 import useRegisterModal from "@/app/hooks/useModal";
+import Button from "../Button";
 import FormInput from "../inputs/FormInput";
 import Heading from "../Heading";
 import Modal from "./Modal";
 
 const registerApiRoute: string = "A route";
 
-const registerTitle: string = "Welcome to Waterbnb!";
+const registerTitle: string = "Welcome to Waterbnb";
 const registerSubtitle: string = "Create an account";
 
 const registerErrorMessage: string =
   "An error occurred while signing up the user. ";
+
+const toastStyles: CSSProperties = {
+  textAlign: "center",
+  lineHeight: "18px",
+  fontSize: "13px",
+  fontWeight: "600",
+};
 
 const defaultValues = {
   name: "",
@@ -62,7 +71,7 @@ const RegisterModal: React.FC = (): JSX.Element => {
       closeModal("register");
       setShouldClearForm(true);
     } catch (error) {
-      console.error(registerErrorMessage, error);
+      toast.error(registerErrorMessage, { style: toastStyles });
     } finally {
       setIsLoading(false);
     }
@@ -110,11 +119,36 @@ const RegisterModal: React.FC = (): JSX.Element => {
     </form>
   );
 
+  const footerContent: JSX.Element = (
+    <div className="flex flex-col gap-4 px-6 pb-6 pt-2">
+      <hr className="mb-4" />
+      <Button
+        label="Continue with Google"
+        onClick={() => {}}
+        isOutlined
+        icon={FcGoogle}
+      />
+      <Button
+        label="Continue with GitHub"
+        onClick={() => {}}
+        isOutlined
+        icon={AiFillGithub}
+      />
+      <div className="mt-1 flex flex-row justify-center gap-2 text-sm font-medium text-neutral-500">
+        <div>Already have an account?</div>
+        <div className="cursor-pointer text-neutral-800 hover:underline">
+          Log in!
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <Modal
       actionLabel="Continue"
       clearErrors={clearErrors}
       body={bodyContent}
+      footer={footerContent}
       isDisabled={isLoading}
       isOpen={isRegisterModalOpen}
       onClose={handleRegisterModalClose}
