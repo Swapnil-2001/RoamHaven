@@ -1,23 +1,22 @@
 import { CSSProperties, useEffect, useState } from "react";
-import axios from "axios";
+import { SignInResponse, signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { AiFillGithub } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 
-import useRegisterModal from "@/app/hooks/useModal";
+import useModal from "@/app/hooks/useModal";
 import Button from "../Button";
 import FormInput from "../inputs/FormInput";
 import Heading from "../Heading";
 import Modal from "./Modal";
 
-const registerApiRoute: string = "/api/register";
+const loginTitle: string = "Welcome back";
+const loginSubtitle: string = "Log into your account";
 
-const registerTitle: string = "Welcome to Waterbnb";
-const registerSubtitle: string = "Create an account";
-
-const registerErrorMessage: string =
-  "An error occurred while signing up the user. ";
+const loginDefaultErrorMessage: string = "An error occurred while logging in. ";
 
 const toastStyles: CSSProperties = {
   textAlign: "center",
@@ -27,22 +26,21 @@ const toastStyles: CSSProperties = {
 };
 
 const defaultValues = {
-  name: "",
   email: "",
   password: "",
-  confirmPassword: "",
 };
 
-const RegisterModal: React.FC = (): JSX.Element => {
+const LoginModal: React.FC = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [shouldClearForm, setShouldClearForm] = useState<boolean>(false);
 
-  const { closeModal, register: isRegisterModalOpen } = useRegisterModal();
+  const router: AppRouterInstance = useRouter();
+
+  const { closeModal, login: isLoginModalOpen } = useModal();
 
   const {
     clearErrors,
     formState: { errors },
-    getValues,
     handleSubmit,
     register,
     reset,
@@ -57,19 +55,28 @@ const RegisterModal: React.FC = (): JSX.Element => {
     }
   }, [shouldClearForm, reset]);
 
-  const handleRegisterModalClose = () => {
+  const handleLoginModalClose = () => {
     setShouldClearForm(true);
-    closeModal("register");
+    closeModal("login");
   };
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true);
     try {
-      await axios.post(registerApiRoute, data);
-      closeModal("register");
-      setShouldClearForm(true);
+      const callback: SignInResponse | undefined = await signIn("credentials", {
+        ...data,
+        redirect: false,
+      });
+      if (callback?.ok) {
+        toast.success("Logged In!", { style: toastStyles });
+        router.refresh();
+        setShouldClearForm(true);
+        closeModal("login");
+      } else if (callback?.error) {
+        toast.error(callback.error, { style: toastStyles });
+      }
     } catch (error) {
-      toast.error(registerErrorMessage, { style: toastStyles });
+      toast.error(loginDefaultErrorMessage, { style: toastStyles });
     } finally {
       setIsLoading(false);
     }
@@ -77,15 +84,7 @@ const RegisterModal: React.FC = (): JSX.Element => {
 
   const bodyContent: JSX.Element = (
     <form className="flex flex-col gap-4">
-      <Heading title={registerTitle} subtitle={registerSubtitle} center />
-      <FormInput
-        id="name"
-        label="Name"
-        required
-        isDisabled={isLoading}
-        register={register}
-        errors={errors}
-      />
+      <Heading title={loginTitle} subtitle={loginSubtitle} center />
       <FormInput
         id="email"
         label="Email"
@@ -102,16 +101,6 @@ const RegisterModal: React.FC = (): JSX.Element => {
         required
         isDisabled={isLoading}
         register={register}
-        errors={errors}
-      />
-      <FormInput
-        id="confirmPassword"
-        label="Confirm Password"
-        type="password"
-        required
-        isDisabled={isLoading}
-        register={register}
-        getValues={getValues}
         errors={errors}
       />
     </form>
@@ -133,9 +122,9 @@ const RegisterModal: React.FC = (): JSX.Element => {
         icon={AiFillGithub}
       />
       <div className="mt-1 flex flex-row justify-center gap-2 text-sm font-medium text-neutral-500">
-        <div>Already have an account?</div>
+        <div>Do not have an account?</div>
         <div className="cursor-pointer text-neutral-800 hover:underline">
-          Log in!
+          Sign up!
         </div>
       </div>
     </div>
@@ -148,12 +137,12 @@ const RegisterModal: React.FC = (): JSX.Element => {
       body={bodyContent}
       footer={footerContent}
       isDisabled={isLoading}
-      isOpen={isRegisterModalOpen}
-      onClose={handleRegisterModalClose}
+      isOpen={isLoginModalOpen}
+      onClose={handleLoginModalClose}
       onSubmit={handleSubmit(onSubmit)}
-      title="Register"
+      title="Login"
     />
   );
 };
 
-export default RegisterModal;
+export default LoginModal;

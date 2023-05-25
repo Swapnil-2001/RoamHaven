@@ -72,7 +72,7 @@ const Modal: React.FC<ModalProps> = ({
     >
       <div
         onClick={handleClickInsideModal}
-        className={`relative mx-auto flex h-auto w-full flex-col rounded-lg bg-white duration-300 sm:w-2/3 lg:w-1/2 xl:w-2/5 ${
+        className={`relative mx-auto flex h-auto w-full flex-col bg-white duration-300 sm:w-2/3 sm:rounded-lg lg:w-1/2 xl:w-2/5 ${
           showModal ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
         }`}
       >

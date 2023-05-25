@@ -1,13 +1,19 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { signOut } from "next-auth/react";
+import { User } from "@prisma/client";
 import { AiOutlineMenu } from "react-icons/ai";
 
 import useModal from "@/app/hooks/useModal";
 import Avatar from "../Avatar";
 import MenuItem from "./MenuItem";
 
-const UserMenu: React.FC = (): JSX.Element => {
+interface UserMenuProps {
+  currentUser: User | null;
+}
+
+const UserMenu: React.FC<UserMenuProps> = ({ currentUser }): JSX.Element => {
   const { openModal } = useModal();
 
   return (
@@ -25,11 +31,42 @@ const UserMenu: React.FC = (): JSX.Element => {
             <Avatar />
           </div>
           <div className="absolute right-0 top-14 flex w-[40vw] scale-0 transform cursor-pointer flex-col overflow-hidden rounded-xl border-[1px] border-gray-200 bg-white text-sm shadow-lg transition duration-200 ease-in-out group-hover:scale-100 md:w-3/4 lg:top-12 lg:w-1/2">
-            <MenuItem handleMenuItemClick={() => {}} menuItemlabel="Login" />
-            <MenuItem
-              handleMenuItemClick={() => openModal("register")}
-              menuItemlabel="Signup"
-            />
+            {currentUser ? (
+              <>
+                <MenuItem
+                  handleMenuItemClick={() => {}}
+                  menuItemlabel="My Trips"
+                />
+                <MenuItem
+                  handleMenuItemClick={() => {}}
+                  menuItemlabel="My Favourites"
+                />
+                <MenuItem
+                  handleMenuItemClick={() => {}}
+                  menuItemlabel="My Reservations"
+                />
+                <MenuItem
+                  handleMenuItemClick={() => {}}
+                  menuItemlabel="My Properties"
+                />
+                <hr />
+                <MenuItem
+                  handleMenuItemClick={() => signOut()}
+                  menuItemlabel="Log Out"
+                />
+              </>
+            ) : (
+              <>
+                <MenuItem
+                  handleMenuItemClick={() => openModal("login")}
+                  menuItemlabel="Login"
+                />
+                <MenuItem
+                  handleMenuItemClick={() => openModal("register")}
+                  menuItemlabel="Signup"
+                />
+              </>
+            )}
           </div>
         </div>
       </div>

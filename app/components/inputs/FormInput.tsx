@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from "react";
 import {
   DeepMap,
   FieldError,
@@ -8,8 +7,11 @@ import {
 } from "react-hook-form";
 import { BiDollar } from "react-icons/bi";
 
-const makeFirstCharUppercase = (name: string) =>
-  name.charAt(0).toUpperCase() + name.slice(1);
+const getFieldName = (name: string) => {
+  if (name !== "confirmPassword")
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  return "Password confirmation";
+};
 
 interface InputProps {
   errors: DeepMap<FieldValues, FieldError>;
@@ -47,8 +49,7 @@ const FormInput: React.FC<InputProps> = ({
         disabled={isDisabled}
         type={type}
         {...register(id, {
-          required:
-            required && `${makeFirstCharUppercase(id)} cannot be empty.`,
+          required: required && `${getFieldName(id)} is required.`,
           validate: (value: string) => {
             if (id === "password" && value.length < 6)
               return "Password must have at least 6 characters.";
@@ -78,7 +79,7 @@ const FormInput: React.FC<InputProps> = ({
         {label}
       </label>
       {Object.hasOwn(errors, id) && (
-        <div className="mt-2 text-sm font-medium text-rose-500">
+        <div className="mt-2 text-xs font-medium text-rose-500">
           {errors[id].message}
         </div>
       )}
