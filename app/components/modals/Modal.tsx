@@ -68,7 +68,7 @@ const Modal: React.FC<ModalProps> = ({
   return (
     <div
       onClick={handleModalClose}
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto overflow-x-hidden bg-neutral-800/70 sm:py-8"
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto overflow-x-hidden bg-neutral-800/70 sm:py-10"
     >
       <div
         onClick={handleClickInsideModal}

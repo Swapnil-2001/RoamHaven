@@ -1,15 +1,16 @@
-import { CSSProperties, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+import { SignInResponse, signIn } from "next-auth/react";
 import axios from "axios";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import { AiFillGithub } from "react-icons/ai";
-import { FcGoogle } from "react-icons/fc";
 
 import useRegisterModal from "@/app/hooks/useModal";
-import Button from "../Button";
 import FormInput from "../inputs/FormInput";
 import Heading from "../Heading";
 import Modal from "./Modal";
+import { toastStyles } from "./toastStyles";
 
 const registerApiRoute: string = "/api/register";
 
@@ -17,14 +18,7 @@ const registerTitle: string = "Welcome to Waterbnb";
 const registerSubtitle: string = "Create an account";
 
 const registerErrorMessage: string =
-  "An error occurred while signing up the user. ";
-
-const toastStyles: CSSProperties = {
-  textAlign: "center",
-  lineHeight: "18px",
-  fontSize: "13px",
-  fontWeight: "600",
-};
+  "Could not complete signup. Possibly, an account with this email already exists.";
 
 const defaultValues = {
   name: "",
@@ -36,6 +30,8 @@ const defaultValues = {
 const RegisterModal: React.FC = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [shouldClearForm, setShouldClearForm] = useState<boolean>(false);
+
+  const router: AppRouterInstance = useRouter();
 
   const { closeModal, register: isRegisterModalOpen } = useRegisterModal();
 
@@ -66,8 +62,16 @@ const RegisterModal: React.FC = (): JSX.Element => {
     setIsLoading(true);
     try {
       await axios.post(registerApiRoute, data);
-      closeModal("register");
+      const callback: SignInResponse | undefined = await signIn("credentials", {
+        ...data,
+        redirect: false,
+      });
+      if (callback?.ok) {
+        toast.success("Good to go!", { style: toastStyles });
+        router.refresh();
+      }
       setShouldClearForm(true);
+      closeModal("register");
     } catch (error) {
       toast.error(registerErrorMessage, { style: toastStyles });
     } finally {
@@ -118,21 +122,9 @@ const RegisterModal: React.FC = (): JSX.Element => {
   );
 
   const footerContent: JSX.Element = (
-    <div className="flex flex-col gap-4 px-6 pb-6 pt-2">
-      <hr className="mb-4" />
-      <Button
-        label="Continue with Google"
-        onClick={() => {}}
-        isOutlined
-        icon={FcGoogle}
-      />
-      <Button
-        label="Continue with GitHub"
-        onClick={() => {}}
-        isOutlined
-        icon={AiFillGithub}
-      />
-      <div className="mt-1 flex flex-row justify-center gap-2 text-sm font-medium text-neutral-500">
+    <div className="flex flex-col gap-4 px-6 pb-8 pt-2">
+      <hr />
+      <div className="mt-2 flex flex-row justify-center gap-2 text-sm font-medium text-neutral-500">
         <div>Already have an account?</div>
         <div className="cursor-pointer text-neutral-800 hover:underline">
           Log in!

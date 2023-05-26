@@ -1,16 +1,15 @@
 "use client";
 
-import { useCallback, useState } from "react";
 import { signOut } from "next-auth/react";
-import { User } from "@prisma/client";
 import { AiOutlineMenu } from "react-icons/ai";
 
 import useModal from "@/app/hooks/useModal";
 import Avatar from "../Avatar";
 import MenuItem from "./MenuItem";
+import { ModifiedUser } from "@/app/types";
 
 interface UserMenuProps {
-  currentUser: User | null;
+  currentUser: ModifiedUser | null;
 }
 
 const UserMenu: React.FC<UserMenuProps> = ({ currentUser }): JSX.Element => {
@@ -51,7 +50,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }): JSX.Element => {
                 />
                 <hr />
                 <MenuItem
-                  handleMenuItemClick={() => signOut()}
+                  handleMenuItemClick={signOut}
                   menuItemlabel="Log Out"
                 />
               </>

@@ -8,67 +8,45 @@ datasource db {
 }
 
 model User {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  name String?
-  email String? @unique
-  emailVerified DateTime?
-  hashedPassword String?
-  image String?
-  favouriteIds String[] @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  name            String?
+  email           String?   @unique
+  hashedPassword  String?
+  favoriteIds     String[]  @db.ObjectId
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
-  accounts Account[]
-  listings Listing[]
-  reservations Reservation[]
-}
-
-model Account {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  userId String @db.ObjectId
-  providerType String
-  provider String
-  providerAccountId String
-  refreshToken String? @db.String
-  accessToken String? @db.String
-  accessTokenExpires Int?
-  tokenType String?
-  scope String?
-  idToken String? @db.String
-  sessionState String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
+  listings        Listing[]
+  reservations    Reservation[]
 }
 
 model Listing {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  userId String @db.ObjectId
-  title String
-  description String
-  location String
-  price Int
-  category String
-  roomCount Int
-  bathroomCount Int
-  guestCount Int
-  imageURL String
-  createdAt DateTime @default(now())
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String    @db.ObjectId
+  title           String
+  description     String
+  imageURL        String
+  location        String
+  category        String
+  price           Int
+  guestCount      Int
+  roomCount       Int
+  bathroomCount   Int
+  createdAt       DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  reservations Reservation[]
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reservations    Reservation[]
 }
 
 model Reservation {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  userId String @db.ObjectId
-  listingId String @db.ObjectId
-  startDate DateTime
-  endDate DateTime
-  totalPrice Int
-  createdAt DateTime @default(now())
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String    @db.ObjectId
+  listingId       String    @db.ObjectId  
+  totalPrice      Int
+  startDate       DateTime
+  endDate         DateTime
+  createdAt       DateTime  @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing         Listing   @relation(fields: [listingId], references: [id], onDelete: Cascade)
 }

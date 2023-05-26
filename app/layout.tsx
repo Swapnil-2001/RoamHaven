@@ -1,10 +1,10 @@
 import { Montserrat } from "next/font/google";
-import { User } from "@prisma/client";
 
 import ListOfModals from "./components/modals/ListOfModals";
 import Navbar from "./components/navbar/Navbar";
 import ToasterProvider from "./providers/ToasterProvider";
 import getCurrentUser from "./actions/getCurrentUser";
+import { ModifiedUser } from "./types";
 import "./globals.css";
 
 const fontFamily = Montserrat({
@@ -21,7 +21,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const currentUser: User | null = await getCurrentUser();
+  const currentUser: ModifiedUser | null = await getCurrentUser();
   return (
     <html lang="en">
       <body className={fontFamily.className}>

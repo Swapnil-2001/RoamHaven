@@ -22,7 +22,11 @@ const getCurrentUser = async () => {
     });
     if (!currentUser) return null;
 
-    return currentUser;
+    return {
+      ...currentUser,
+      createdAt: currentUser.createdAt.toISOString(),
+      updatedAt: currentUser.updatedAt.toISOString(),
+    };
   } catch (error) {
     return null;
   }

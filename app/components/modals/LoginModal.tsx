@@ -1,29 +1,20 @@
-import { CSSProperties, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { SignInResponse, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import { AiFillGithub } from "react-icons/ai";
-import { FcGoogle } from "react-icons/fc";
 
 import useModal from "@/app/hooks/useModal";
-import Button from "../Button";
 import FormInput from "../inputs/FormInput";
 import Heading from "../Heading";
 import Modal from "./Modal";
+import { toastStyles } from "./toastStyles";
 
 const loginTitle: string = "Welcome back";
 const loginSubtitle: string = "Log into your account";
 
 const loginDefaultErrorMessage: string = "An error occurred while logging in. ";
-
-const toastStyles: CSSProperties = {
-  textAlign: "center",
-  lineHeight: "18px",
-  fontSize: "13px",
-  fontWeight: "600",
-};
 
 const defaultValues = {
   email: "",
@@ -107,21 +98,9 @@ const LoginModal: React.FC = (): JSX.Element => {
   );
 
   const footerContent: JSX.Element = (
-    <div className="flex flex-col gap-4 px-6 pb-6 pt-2">
-      <hr className="mb-4" />
-      <Button
-        label="Continue with Google"
-        onClick={() => {}}
-        isOutlined
-        icon={FcGoogle}
-      />
-      <Button
-        label="Continue with GitHub"
-        onClick={() => {}}
-        isOutlined
-        icon={AiFillGithub}
-      />
-      <div className="mt-1 flex flex-row justify-center gap-2 text-sm font-medium text-neutral-500">
+    <div className="flex flex-col gap-4 px-6 pb-8 pt-2">
+      <hr />
+      <div className="mt-2 flex flex-row justify-center gap-2 text-sm font-medium text-neutral-500">
         <div>Do not have an account?</div>
         <div className="cursor-pointer text-neutral-800 hover:underline">
           Sign up!

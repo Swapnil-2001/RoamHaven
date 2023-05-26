@@ -1,7 +1,5 @@
 import bcrypt from "bcrypt";
 import CredentialsProvider from "next-auth/providers/credentials";
-import GitHubProvider from "next-auth/providers/github";
-import GoogleProvider from "next-auth/providers/google";
 import NextAuth, { AuthOptions } from "next-auth";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { User } from "@prisma/client";
@@ -16,14 +14,6 @@ const INCORRECT_PASSWORD_ERROR_MESSAGE = "Incorrect password.";
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prismaClient),
   providers: [
-    GitHubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID as string,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-    }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    }),
     CredentialsProvider({
       credentials: {
         email: { label: "Email", type: "email" },
@@ -57,6 +47,9 @@ export const authOptions: AuthOptions = {
       },
     }),
   ],
+  pages: {
+    signIn: "/",
+  },
   debug: process.env.NODE_ENV === "development",
   session: {
     strategy: "jwt",
