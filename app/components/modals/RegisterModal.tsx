@@ -10,15 +10,11 @@ import useRegisterModal from "@/app/hooks/useModal";
 import FormInput from "../inputs/FormInput";
 import Heading from "../Heading";
 import Modal from "./Modal";
-import { toastStyles } from "./toastStyles";
+import { registerTitle, registerSubtitle } from "@/app/constants/modalTexts";
+import { registerErrorMessage } from "@/app/constants/errorMessages";
+import { toastStyles } from "../../constants/toastStyles";
 
 const registerApiRoute: string = "/api/register";
-
-const registerTitle: string = "Welcome to Waterbnb";
-const registerSubtitle: string = "Create an account";
-
-const registerErrorMessage: string =
-  "Could not complete signup. Possibly, an account with this email already exists.";
 
 const defaultValues = {
   name: "",
@@ -33,7 +29,11 @@ const RegisterModal: React.FC = (): JSX.Element => {
 
   const router: AppRouterInstance = useRouter();
 
-  const { closeModal, register: isRegisterModalOpen } = useRegisterModal();
+  const {
+    closeModal,
+    openModal,
+    register: isRegisterModalOpen,
+  } = useRegisterModal();
 
   const {
     clearErrors,
@@ -77,6 +77,11 @@ const RegisterModal: React.FC = (): JSX.Element => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const openLoginModal = (): void => {
+    closeModal("register");
+    openModal("login");
   };
 
   const bodyContent: JSX.Element = (
@@ -126,7 +131,10 @@ const RegisterModal: React.FC = (): JSX.Element => {
       <hr />
       <div className="mt-2 flex flex-row justify-center gap-2 text-sm font-medium text-neutral-500">
         <div>Already have an account?</div>
-        <div className="cursor-pointer text-neutral-800 hover:underline">
+        <div
+          onClick={openLoginModal}
+          className="cursor-pointer text-neutral-800 hover:underline"
+        >
           Log in!
         </div>
       </div>

@@ -9,3 +9,11 @@ export type ModifiedUser = Omit<
   updatedAt: string;
   emailVerified: string | null;
 };
+
+export type CountryInputValue = {
+  label: string;
+  code: string;
+  region: string;
+  flag: string;
+  latlng: number[];
+};

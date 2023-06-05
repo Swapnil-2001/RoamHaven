@@ -1,15 +1,17 @@
-import Image from "next/image";
+"use client";
+
+import { useRouter } from "next/navigation";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 
 const Logo: React.FC = (): JSX.Element => {
+  const router: AppRouterInstance = useRouter();
+
   return (
-    <div className="lg:w-1/3">
-      <Image
-        src="/images/logo.png"
-        alt="App Logo"
-        height={100}
-        width={100}
-        className="hidden cursor-pointer md:block"
-      />
+    <div
+      onClick={() => router.push("/")}
+      className="mr-2 hidden cursor-pointer text-xl font-bold text-indigo-500 md:block lg:w-1/3"
+    >
+      RoamHaven
     </div>
   );
 };

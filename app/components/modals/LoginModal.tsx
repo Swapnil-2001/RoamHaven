@@ -9,12 +9,12 @@ import useModal from "@/app/hooks/useModal";
 import FormInput from "../inputs/FormInput";
 import Heading from "../Heading";
 import Modal from "./Modal";
-import { toastStyles } from "./toastStyles";
-
-const loginTitle: string = "Welcome back";
-const loginSubtitle: string = "Log into your account";
-
-const loginDefaultErrorMessage: string = "An error occurred while logging in. ";
+import { loginTitle, loginSubtitle } from "@/app/constants/modalTexts";
+import {
+  loginCallbackErrorMessage,
+  loginDefaultErrorMessage,
+} from "@/app/constants/errorMessages";
+import { toastStyles } from "../../constants/toastStyles";
 
 const defaultValues = {
   email: "",
@@ -27,7 +27,7 @@ const LoginModal: React.FC = (): JSX.Element => {
 
   const router: AppRouterInstance = useRouter();
 
-  const { closeModal, login: isLoginModalOpen } = useModal();
+  const { closeModal, openModal, login: isLoginModalOpen } = useModal();
 
   const {
     clearErrors,
@@ -51,6 +51,11 @@ const LoginModal: React.FC = (): JSX.Element => {
     closeModal("login");
   };
 
+  const openRegisterModal = (): void => {
+    closeModal("login");
+    openModal("register");
+  };
+
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true);
     try {
@@ -64,7 +69,7 @@ const LoginModal: React.FC = (): JSX.Element => {
         setShouldClearForm(true);
         closeModal("login");
       } else if (callback?.error) {
-        toast.error(callback.error, { style: toastStyles });
+        toast.error(loginCallbackErrorMessage, { style: toastStyles });
       }
     } catch (error) {
       toast.error(loginDefaultErrorMessage, { style: toastStyles });
@@ -102,7 +107,10 @@ const LoginModal: React.FC = (): JSX.Element => {
       <hr />
       <div className="mt-2 flex flex-row justify-center gap-2 text-sm font-medium text-neutral-500">
         <div>Do not have an account?</div>
-        <div className="cursor-pointer text-neutral-800 hover:underline">
+        <div
+          onClick={openRegisterModal}
+          className="cursor-pointer text-neutral-800 hover:underline"
+        >
           Sign up!
         </div>
       </div>

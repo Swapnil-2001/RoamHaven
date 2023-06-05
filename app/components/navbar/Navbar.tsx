@@ -1,4 +1,5 @@
 import Container from "../Container";
+import Categories from "./Categories";
 import Logo from "./Logo";
 import Search from "./Search";
 import UserMenu from "./UserMenu";
@@ -10,12 +11,15 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ currentUser }): JSX.Element => {
   return (
-    <div className="fixed z-10 w-full border-b-[1px] bg-white py-4 shadow-md">
-      <Container>
-        <Logo />
-        <Search />
-        <UserMenu currentUser={currentUser} />
-      </Container>
+    <div className="fixed z-10 w-full bg-white shadow-md">
+      <div className="border-b-[1px] py-4">
+        <Container>
+          <Logo />
+          <Search />
+          <UserMenu currentUser={currentUser} />
+        </Container>
+      </div>
+      <Categories />
     </div>
   );
 };

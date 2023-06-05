@@ -6,11 +6,11 @@ import Button from "../Button";
 
 interface ModalProps {
   actionLabel: string;
-  clearErrors: UseFormClearErrors<FieldValues>;
   isOpen: boolean;
   onClose: () => void;
   onSubmit: () => void;
   body?: JSX.Element;
+  clearErrors?: UseFormClearErrors<FieldValues>;
   footer?: JSX.Element;
   isDisabled?: boolean;
   secondaryAction?: () => void;
@@ -47,7 +47,7 @@ const Modal: React.FC<ModalProps> = ({
     if (isDisabled) return;
 
     setShowModal(false);
-    clearErrors();
+    if (clearErrors) clearErrors();
     setTimeout(() => onClose(), 300);
   };
 
@@ -68,11 +68,11 @@ const Modal: React.FC<ModalProps> = ({
   return (
     <div
       onClick={handleModalClose}
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto overflow-x-hidden bg-neutral-800/70 sm:py-10"
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto overflow-x-hidden bg-neutral-800/70 sm:py-16"
     >
       <div
         onClick={handleClickInsideModal}
-        className={`relative mx-auto flex h-auto w-full flex-col bg-white duration-300 sm:w-2/3 sm:rounded-lg lg:w-1/2 xl:w-2/5 ${
+        className={`relative mx-auto flex w-full flex-col bg-white duration-300 sm:h-auto sm:w-2/3 sm:rounded-lg lg:w-1/2 xl:w-2/5 ${
           showModal ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
         }`}
       >

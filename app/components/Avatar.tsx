@@ -1,7 +1,14 @@
 import Image from "next/image";
+import { BsFillPersonFill } from "react-icons/bs";
 
-const Avatar: React.FC = (): JSX.Element => {
-  return (
+interface AvatarProps {
+  isUserLoggedIn: boolean;
+}
+
+const Avatar: React.FC<AvatarProps> = ({ isUserLoggedIn }): JSX.Element => {
+  return isUserLoggedIn ? (
+    <BsFillPersonFill size={28} className="text-indigo-500" />
+  ) : (
     <Image
       src="/images/placeholder.jpg"
       alt="Avatar"

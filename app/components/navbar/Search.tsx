@@ -9,7 +9,7 @@ const Search: React.FC = (): JSX.Element => {
       </div>
       <div className="flex flex-row items-center gap-3 pl-6 pr-2 text-sm text-gray-600">
         <div className="hidden sm:block">Add guests</div>
-        <div className="rounded-full bg-rose-500 p-2 text-white">
+        <div className="rounded-full bg-indigo-500 p-2 text-white">
           <BiSearch size={18} />
         </div>
       </div>
