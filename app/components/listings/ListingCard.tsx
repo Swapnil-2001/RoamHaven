@@ -3,16 +3,16 @@
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Listing, Reservation } from "@prisma/client";
+import { Reservation } from "@prisma/client";
 import { format } from "date-fns";
 
 import useCountries from "@/app/hooks/useCountries";
 import Button from "../Button";
 import LikeButton from "../LikeButton";
-import { CountryInputValue, ModifiedUser } from "@/app/types";
+import { CountryInputValue, ModifiedListing, ModifiedUser } from "@/app/types";
 
 interface ListingCardProps {
-  data: Listing;
+  data: ModifiedListing;
   currentUser?: ModifiedUser | null;
   reservation?: Reservation;
   isDisabled?: boolean;

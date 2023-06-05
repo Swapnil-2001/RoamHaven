@@ -1,6 +1,10 @@
-import { User } from "@prisma/client";
+import { Listing, User } from "@prisma/client";
 
 // Don't use keys with type 'DateTime'; hydration errors possible
+export type ModifiedListing = Omit<Listing, "createdAt"> & {
+  createdAt: string;
+};
+
 export type ModifiedUser = Omit<User, "createdAt" | "updatedAt"> & {
   createdAt: string;
   updatedAt: string;

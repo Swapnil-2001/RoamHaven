@@ -1,4 +1,6 @@
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+
+import useFavorite from "../hooks/useFavorite";
 import { ModifiedUser } from "../types";
 
 interface LikeButtonProps {
@@ -10,9 +12,10 @@ const LikeButton: React.FC<LikeButtonProps> = ({
   listingId,
   currentUser,
 }): JSX.Element => {
-  const isFavorited: boolean = false;
-
-  const toggleFavorite = () => {};
+  const { isFavorited, toggleFavorite } = useFavorite({
+    listingId,
+    currentUser,
+  });
 
   return (
     <div

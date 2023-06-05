@@ -1,15 +1,13 @@
-import { Listing } from "@prisma/client";
-
 import Container from "./components/Container";
 import EmptyState from "./components/EmptyState";
 import ListingCard from "./components/listings/ListingCard";
 import getCurrentUser from "./actions/getCurrentUser";
 import getListings from "./actions/getListings";
-import { ModifiedUser } from "./types";
+import { ModifiedListing, ModifiedUser } from "./types";
 
 export default async function Home() {
   const currentUser: ModifiedUser | null = await getCurrentUser();
-  const listings: Listing[] = await getListings();
+  const listings: ModifiedListing[] = await getListings();
 
   if (listings.length === 0) return <EmptyState showReset />;
 
@@ -28,7 +26,7 @@ export default async function Home() {
           2xl:grid-cols-6
         "
       >
-        {listings.map((listing: Listing) => (
+        {listings.map((listing: ModifiedListing) => (
           <ListingCard
             key={listing.id}
             data={listing}
