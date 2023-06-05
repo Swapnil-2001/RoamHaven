@@ -1,18 +1,28 @@
-import { useMemo, useState } from "react";
-import dynamic from "next/dynamic";
-import { FieldValues, useForm } from "react-hook-form";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 import useModal from "@/app/hooks/useModal";
 import CategoryInput from "../inputs/CategoryInput";
 import CountryInput from "../inputs/CountryInput";
+import FormInput from "../inputs/FormInput";
 import Heading from "../Heading";
+import ImageInput from "../inputs/ImageInput";
+import InfoInput from "../inputs/InfoInput";
 import Modal from "./Modal";
 import { categories } from "../navbar/Categories";
 import {
+  descriptionSubtitle,
+  descriptionTitle,
+  selectInfoSubtitle,
+  selectInfoTitle,
   selectLocationSubtitle,
   selectLocationTitle,
 } from "@/app/constants/modalTexts";
 import { CountryInputValue } from "@/app/types";
+import { toastStyles } from "@/app/constants/toastStyles";
 
 enum STEPS {
   CATEGORY = 0,
@@ -23,34 +33,51 @@ enum STEPS {
   PRICE = 5,
 }
 
-const watchedFields: string[] = ["category", "location"];
+interface RentFieldValues {
+  imageURL: string;
+  location: CountryInputValue | null;
+  category: string;
+  guestCount: number;
+  roomCount: number;
+  bathroomCount: number;
+}
+
+const rentModalDefaultFieldValues: RentFieldValues = {
+  imageURL: "",
+  location: null,
+  category: "",
+  guestCount: 1,
+  roomCount: 1,
+  bathroomCount: 1,
+};
 
 const RentModal: React.FC = (): JSX.Element => {
   const [step, setStep] = useState<number>(STEPS.CATEGORY);
+  const [fieldValues, setFieldValues] = useState<RentFieldValues>(
+    rentModalDefaultFieldValues
+  );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { setValue, watch } = useForm<FieldValues>({
+  const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FieldValues>({
     defaultValues: {
       title: "",
       description: "",
-      imageURL: "",
-      location: null,
-      category: "",
-      price: 0,
-      guestCount: 1,
-      roomCount: 1,
-      bathroomCount: 1,
+      price: 10,
     },
   });
 
-  const category: string | null = watch("category");
-  const location: CountryInputValue | null = watch("location");
-
-  const setFieldValue = (id: string, value: any) => {
-    setValue(id, value, {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    });
+  const setAFieldValue = (id: string, value: any) => {
+    setFieldValues((currentValues) => ({
+      ...currentValues,
+      [id]: value,
+    }));
   };
 
   const { closeModal, rent: isRentModalOpen } = useModal();
@@ -72,9 +99,9 @@ const RentModal: React.FC = (): JSX.Element => {
               icon={categoryItem.icon}
               label={categoryItem.label}
               onClick={(category: string) =>
-                setFieldValue("category", category)
+                setAFieldValue("category", category)
               }
-              selected={category === categoryItem.label}
+              selected={fieldValues.category === categoryItem.label}
             />
           </div>
         ))}
@@ -92,9 +119,111 @@ const RentModal: React.FC = (): JSX.Element => {
         />
         <CountryInput
           handleChange={(value: CountryInputValue) =>
-            setFieldValue("location", value)
+            setAFieldValue("location", value)
           }
-          value={location}
+          value={fieldValues.location}
+        />
+      </div>
+    );
+  }
+
+  if (step === STEPS.INFO) {
+    bodyContent = (
+      <div className="flex flex-col gap-8">
+        <Heading title={selectInfoTitle} subtitle={selectInfoSubtitle} center />
+        <InfoInput
+          title="Number of Guests"
+          subtitle="Specify the number of guests allowed."
+          count={fieldValues.guestCount}
+          handleChange={(value: number) => {
+            setAFieldValue("guestCount", value);
+          }}
+        />
+        <hr />
+        <InfoInput
+          title="Number of Rooms"
+          subtitle="Specify the number of rooms available."
+          count={fieldValues.roomCount}
+          handleChange={(value: number) => {
+            setAFieldValue("roomCount", value);
+          }}
+        />
+        <hr />
+        <InfoInput
+          title="Number of Bathrooms"
+          subtitle="Specify the number of bathrooms available."
+          count={fieldValues.bathroomCount}
+          handleChange={(value: number) => {
+            setAFieldValue("bathroomCount", value);
+          }}
+        />
+      </div>
+    );
+  }
+
+  if (step === STEPS.IMAGES) {
+    bodyContent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Add a picture of your place"
+          subtitle="Show guests what your place looks like."
+          center
+        />
+        <ImageInput
+          url={fieldValues.imageURL}
+          handleChange={(url: string) => {
+            setAFieldValue("imageURL", url);
+          }}
+        />
+      </div>
+    );
+  }
+
+  if (step === STEPS.DESCRIPTION) {
+    bodyContent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+          title={descriptionTitle}
+          subtitle={descriptionSubtitle}
+          center
+        />
+        <FormInput
+          id="title"
+          label="Title"
+          required
+          register={register}
+          errors={errors}
+          isDisabled={isLoading}
+        />
+        <FormInput
+          id="description"
+          label="Description"
+          required
+          register={register}
+          errors={errors}
+          isDisabled={isLoading}
+        />
+      </div>
+    );
+  }
+
+  if (step === STEPS.PRICE) {
+    bodyContent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Now, set your price"
+          subtitle="How much do you charge per night?"
+          center
+        />
+        <FormInput
+          id="price"
+          label="Price"
+          type="number"
+          required
+          register={register}
+          errors={errors}
+          isDisabled={isLoading}
+          formatPrice
         />
       </div>
     );
@@ -108,8 +237,26 @@ const RentModal: React.FC = (): JSX.Element => {
     setStep((currentStep) => currentStep + 1);
   };
 
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    if (step !== STEPS.PRICE) return goToNextItem();
+
+    setIsLoading(true);
+    try {
+      await axios.post("/api/listings", { ...data, ...fieldValues });
+      toast.success("Listing created successfully!", { style: toastStyles });
+      router.refresh();
+      handleRentModalClose();
+    } catch (error) {
+      toast.error("Could not create listing.", { style: toastStyles });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleRentModalClose = (): void => {
-    watchedFields.forEach((field: string) => setFieldValue(field, null));
+    reset();
+    setFieldValues(rentModalDefaultFieldValues);
+    setStep(STEPS.CATEGORY);
     closeModal("rent");
   };
 
@@ -118,7 +265,7 @@ const RentModal: React.FC = (): JSX.Element => {
       actionLabel={isLastStep ? "Create" : "Next"}
       isOpen={isRentModalOpen}
       onClose={handleRentModalClose}
-      onSubmit={goToNextItem}
+      onSubmit={handleSubmit(onSubmit)}
       body={bodyContent}
       secondaryAction={isFirstStep ? undefined : goToPreviousItem}
       secondaryActionLabel={isFirstStep ? undefined : "Back"}

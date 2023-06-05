@@ -15,7 +15,9 @@ const formattedCountries: CountryInputValue[] = countries.map(
 const useCountries = () => {
   const getAllCountries = () => formattedCountries;
 
-  const getCountryByCode = (countryCode: string) =>
+  const getCountryByCode = (
+    countryCode: string
+  ): CountryInputValue | undefined =>
     formattedCountries.find(({ code }) => code === countryCode);
 
   return {
