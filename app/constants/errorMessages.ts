@@ -5,3 +5,6 @@ export const loginDefaultErrorMessage: string =
 
 export const registerErrorMessage: string =
   "Could not complete signup. Possibly, an account with this email already exists.";
+
+export const cancelReservationErrorMessage: string =
+  "Could not cancel reservation. Please try again.";

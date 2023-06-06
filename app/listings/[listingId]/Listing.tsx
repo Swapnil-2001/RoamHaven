@@ -77,7 +77,8 @@ const Listing: React.FC<ListingProps> = ({
       });
       toast.success("Listing reserved!", { style: toastStyles });
       setDateRange(initialDateRange);
-      // router.push("/trips");
+      router.refresh();
+      router.push("/trips");
     } catch (error) {
       toast.error("Could not create reservation.", { style: toastStyles });
     } finally {
