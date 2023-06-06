@@ -33,7 +33,7 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
       <div className="flex flex-row items-center gap-2 text-xl font-semibold">
         Hosted by {user?.name}
       </div>
-      <div className="font-lighttext-neutral-500 flex flex-row items-center gap-4">
+      <div className="font-lighttext-neutral-500 flex flex-row items-center gap-4 text-sm">
         <div>{guestCount} guests</div>
         <div>{roomCount} rooms</div>
         <div>{bathroomCount} bathrooms</div>

@@ -24,12 +24,13 @@ const ListingHeader: React.FC<ListingHeaderProps> = ({
 
   const location = getCountryByCode(locationCode);
   return (
-    <>
+    <div className="mt-2">
       <Heading
         title={title}
         subtitle={`${location?.region}, ${location?.label}`}
+        center
       />
-      <div className="relative h-[60vh] w-full overflow-hidden rounded-xl">
+      <div className="relative mt-8 h-[60vh] w-full overflow-hidden rounded-xl">
         <Image
           src={imageURL}
           fill
@@ -40,7 +41,7 @@ const ListingHeader: React.FC<ListingHeaderProps> = ({
           <LikeButton listingId={id} currentUser={currentUser} />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
